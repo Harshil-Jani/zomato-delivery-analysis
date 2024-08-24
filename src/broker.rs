@@ -1,11 +1,10 @@
 use std::sync::Arc;
-use tokio::sync::Mutex;
 use fluvio::{ spu::SpuSocketPool, RecordKey, TopicProducer };
 
 use crate::{ source::ZomatoData, ZomatoProducers };
 
 pub async fn run_broker(
-    zomato_producers: &Arc<Mutex<ZomatoProducers>>,
+    zomato_producers: &Arc<ZomatoProducers>,
     data: ZomatoData
 ) -> anyhow::Result<()> {
     println!("Initialized Broker");
@@ -13,18 +12,11 @@ pub async fn run_broker(
     // This broker will collect all the data received from the delivery consumer.
     // This data will be further sent to three different producers.
     // Each producer will then send this data to a different consumer.
-    // Try to lock
-    let producers = match zomato_producers.try_lock() {
-        Ok(guard) => guard,
-        Err(_) => {
-            eprintln!("Failed to acquire lock");
-            return Err(anyhow::anyhow!("Failed to acquire lock"));
-        }
-    };
+    
     println!("Working ? ");
-    prepare_efficiency_analysis_data(&producers.efficiency_producer, &data).await;
-    prepare_customer_satisfaction_data(&producers.customer_satisfaction_producer, &data).await;
-    prepare_vehicle_performance_data(&producers.vehicle_performance_producer, &data).await;
+    prepare_efficiency_analysis_data(&zomato_producers.efficiency_producer, &data).await;
+    prepare_customer_satisfaction_data(&zomato_producers.customer_satisfaction_producer, &data).await;
+    prepare_vehicle_performance_data(&zomato_producers.vehicle_performance_producer, &data).await;
     Ok(())
 }
 

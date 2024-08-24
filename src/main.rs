@@ -1,5 +1,4 @@
 use std::sync::Arc;
-use tokio::sync::Mutex;
 
 mod producer;
 mod consumer;
@@ -35,14 +34,14 @@ impl ZomatoProducers {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let zomato_producers = Arc::new(Mutex::new(ZomatoProducers::new().await));
+    let zomato_producers = Arc::new(ZomatoProducers::new().await);
 
     // Clone the Arc for the spawned task
     let producer_arc = Arc::clone(&zomato_producers);
 
     // Spawn a separate task to run the producer in a loop
     task::spawn(async move {
-        let producers = producer_arc.lock().await;
+        let producers = &producer_arc;
         // This is the main delivery producer thread which will
         // constantly keep listening for all incoming delivery data
         if let Err(e) = delivery_producer(&producers.delivery_producer).await {

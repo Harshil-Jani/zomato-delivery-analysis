@@ -1,5 +1,4 @@
 use std::sync::Arc;
-use tokio::sync::Mutex;
 
 use fluvio::{
     consumer::{ ConsumerConfigExtBuilder, ConsumerStream, OffsetManagementStrategy },
@@ -11,7 +10,7 @@ use futures_util::StreamExt;
 use crate::{ broker::run_broker, source::ZomatoData, ZomatoProducers };
 
 pub async fn delivery_consumer(
-    zomato_producers: Arc<Mutex<ZomatoProducers>>
+    zomato_producers: Arc<ZomatoProducers>
 ) -> anyhow::Result<()> {
     println!("Connected to Delivery Consumer");
     let fluvio = &Fluvio::connect().await?;
