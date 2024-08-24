@@ -1,8 +1,9 @@
 use std::error::Error;
 use std::fs::File;
 use std::path::Path;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ZomatoData {
     pub id: String,
     pub delivery_person_id: String,
@@ -29,21 +30,21 @@ pub fn read_csv<P: AsRef<Path>>(filename: P) -> Result<Vec<ZomatoData>, Box<dyn 
     for result in rdr.records() {
         let record = result?;
         if record[13].parse::<u8>().is_err() {
-            println!("Error parsing field vehicle_condition {}", record[13].to_string());
+            // println!("Error parsing field vehicle_condition {}", record[13].to_string());
             continue;
         }
         // If record 13 is "Yes" then mark true else false
         let festival = if &record[17] == "Yes" { true } else { false };
         if record[19].parse::<u8>().is_err() {
-            println!("Error parsing field time_taken_min {:#?}", record[19].to_string());
+            // println!("Error parsing field time_taken_min {:#?}", record[19].to_string());
             continue;
         }
         if record[16].parse::<u8>().is_err() {
-            println!("Error parsing field multiple_deliveries {:#?}", record[16].to_string());
+            // println!("Error parsing field multiple_deliveries {:#?}", record[16].to_string());
             continue;
         }
         if record[2].parse::<u8>().is_err() {
-            println!("Error parsing field delivery_person_age {:#?}", record[2].to_string());
+            // println!("Error parsing field delivery_person_age {:#?}", record[2].to_string());
             continue;
         }
 
@@ -68,6 +69,5 @@ pub fn read_csv<P: AsRef<Path>>(filename: P) -> Result<Vec<ZomatoData>, Box<dyn 
 
         data.push(row);
     }
-    println!("Done reading csv");
     Ok(data)
 }
