@@ -19,10 +19,10 @@ struct ZomatoProducers {
 
 impl ZomatoProducers {
     pub async fn new() -> Self {
-        let delivery_producer = fluvio::producer("4-test").await.unwrap();
-        let efficiency_producer = fluvio::producer("1-test").await.unwrap();
-        let customer_satisfaction_producer = fluvio::producer("2-test").await.unwrap();
-        let vehicle_performance_producer = fluvio::producer("3-test").await.unwrap();
+        let delivery_producer = fluvio::producer("delivery").await.unwrap();
+        let efficiency_producer = fluvio::producer("efficiency-analysis").await.unwrap();
+        let customer_satisfaction_producer = fluvio::producer("customer-satisfaction-analysis").await.unwrap();
+        let vehicle_performance_producer = fluvio::producer("vehicle-condition-analysis").await.unwrap();
         ZomatoProducers {
             delivery_producer,
             efficiency_producer,
@@ -48,7 +48,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             eprintln!("Producer encountered an error: {:?}", e);
         }
     });
-
+    println!("Zomato Delivery Pipeline Started...");
     // Delivery Consumer will listen to all incoming Delivery Data
     delivery_consumer(zomato_producers).await?;
     Ok(())

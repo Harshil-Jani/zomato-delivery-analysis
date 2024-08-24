@@ -1,5 +1,5 @@
 [package]
-name = "cnbc_news_sentiment"
+name = "zomato_delivery_analysis"
 version = "0.1.0"
 edition = "2021"
 

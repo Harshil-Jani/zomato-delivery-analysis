@@ -5,7 +5,7 @@ use tokio::time;
 use crate::source::read_csv;
 
 pub async fn delivery_producer(producer: &TopicProducer<SpuSocketPool>) -> anyhow::Result<()> {
-    println!("Connected to Delivery Producer");
+    println!("Delivery Producer Connected");
     // Bring source data into the producer
     // In real-time data, This should be an API call every few seconds.
     // or could be a streaming socket connection which can be looped to constantly

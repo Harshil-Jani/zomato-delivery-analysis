@@ -7,13 +7,10 @@ pub async fn run_broker(
     zomato_producers: &Arc<ZomatoProducers>,
     data: ZomatoData
 ) -> anyhow::Result<()> {
-    println!("Initialized Broker");
-    println!("Working.");
+    println!("Broker received some event");
     // This broker will collect all the data received from the delivery consumer.
     // This data will be further sent to three different producers.
     // Each producer will then send this data to a different consumer.
-    
-    println!("Working ? ");
     prepare_efficiency_analysis_data(&zomato_producers.efficiency_producer, &data).await;
     prepare_customer_satisfaction_data(&zomato_producers.customer_satisfaction_producer, &data).await;
     prepare_vehicle_performance_data(&zomato_producers.vehicle_performance_producer, &data).await;
@@ -65,7 +62,7 @@ async fn prepare_vehicle_performance_data(
     analyzed_data["base_performance"] = serde_json::json!(base_performance);
 
     // Serialize required data format to a JSON string.
-    let serialized_data = serde_json::to_string(&data).unwrap();
+    let serialized_data = serde_json::to_string(&analyzed_data).unwrap();
     producer.send(RecordKey::NULL, serialized_data).await.unwrap();
     producer.flush().await.unwrap();
 }
@@ -74,7 +71,6 @@ async fn prepare_efficiency_analysis_data(
     producer: &TopicProducer<SpuSocketPool>,
     data: &ZomatoData
 ) {
-    println!("Preparing Efficiency Analysis Data");
     // Efficiency score calculation
     let base_efficiency = 10.0 - (data.time_taken_min as f32) / 5.0;
     let traffic_factor = match data.road_traffic_density.as_str() {
@@ -100,7 +96,7 @@ async fn prepare_efficiency_analysis_data(
     analyzed_data["base_efficiency"] = serde_json::json!(base_efficiency);
 
     // Serialize required data format to a JSON string.
-    let serialized_data = serde_json::to_string(&data).unwrap();
+    let serialized_data = serde_json::to_string(&analyzed_data).unwrap();
     producer.send(RecordKey::NULL, serialized_data).await.unwrap();
     producer.flush().await.unwrap();
 }
