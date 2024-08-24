@@ -46,3 +46,33 @@ This architecture diagram represents an event-driven system designed to analyze 
 - The data consumed by each analysis pipeline serves as both a data source for subsequent analyses and as an event trigger for further processing. This design allows for the continuous evolution of insights across different aspects of the delivery process.
 
 This architecture enables a modular and scalable approach to analyzing different facets of delivery operations, with each analysis pipeline focusing on a specific aspect of the delivery data. The event-driven nature of the system ensures that data flows smoothly from one stage to the next, facilitating real-time insights and decision-making.
+
+# Installation
+
+Install, Fluvio
+
+```bash
+curl -fsS https://hub.infinyon.cloud/install/install.sh | bash
+
+```
+
+Install Rust
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+```bash
+git clone git@github.com:Harshil-Jani/zomato-delivery-analysis.git
+cd zomato-delivery-analysis/
+./setup
+cargo run
+```
+
+You can extend the pipeline to write code for the consumers that writes the analysis output into the db. For the scope of this PoC, I am running things in CLI. Please refer video below to understand it in more details.
+
+# Demo Video
+
+<video width="820" height="440" controls>
+  <source src="demo.mp4" type="video/mp4">
+</video>
